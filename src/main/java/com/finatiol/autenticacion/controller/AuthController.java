@@ -1,33 +1,18 @@
 package com.finatiol.autenticacion.controller;
 
 import org.springframework.http.HttpStatus;
-
 import org.springframework.security.crypto.password.PasswordEncoder;
-
-import org.springframework.web.bind.annotation.GetMapping;
-
-import org.springframework.web.bind.annotation.PathVariable;
-
 import org.springframework.web.bind.annotation.PostMapping;
-
 import org.springframework.web.bind.annotation.RequestBody;
-
 import org.springframework.web.bind.annotation.RequestMapping;
-
 import org.springframework.web.bind.annotation.RestController;
 
 import com.finatiol.autenticacion.constants.SuccessCodes;
-
 import com.finatiol.autenticacion.constants.SuccessMessages;
-
 import com.finatiol.autenticacion.dto.ApiResponse;
-
 import com.finatiol.autenticacion.dto.AuthResponse;
-
 import com.finatiol.autenticacion.dto.LoginRequest;
-
 import com.finatiol.autenticacion.dto.RefreshTokenRequest;
-
 import com.finatiol.autenticacion.service.AuthService;
 
 @RestController
@@ -105,19 +90,4 @@ public class AuthController {
         );
     }
 
-    @GetMapping("/encrypt/{password}")
-    public ApiResponse<String> encryptPassword(
-            @PathVariable String password) {
-
-        return new ApiResponse<>(
-
-                SuccessCodes.PASSWORD_ENCRIPTADO,
-
-                SuccessMessages.PASSWORD_ENCRIPTADO,
-
-                HttpStatus.OK.value(),
-
-                passwordEncoder.encode(password)
-        );
-    }
 }
