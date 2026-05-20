@@ -1,24 +1,9 @@
-package com.finatiol.autenticacion.entity;
+package com.finatiol.autenticacion.dto;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+public class ModuloResponseDTO {
 
-@Entity
-@Table(name = "modulos")
-public class ModuloEntity {
-
-    @Id
-    @GeneratedValue(
-            strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(
-            nullable = false,
-            unique = true)
     private String nombre;
 
     private String descripcion;
@@ -29,7 +14,34 @@ public class ModuloEntity {
 
     private Boolean activo;
 
-    public ModuloEntity() {
+    public ModuloResponseDTO() {
+    }
+
+    public ModuloResponseDTO(
+
+            Long id,
+
+            String nombre,
+
+            String descripcion,
+
+            String ruta,
+
+            String icono,
+
+            Boolean activo) {
+
+        this.id = id;
+
+        this.nombre = nombre;
+
+        this.descripcion = descripcion;
+
+        this.ruta = ruta;
+
+        this.icono = icono;
+
+        this.activo = activo;
     }
 
     public Long getId() {

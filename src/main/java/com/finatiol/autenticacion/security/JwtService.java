@@ -1,5 +1,6 @@
 package com.finatiol.autenticacion.security;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -35,24 +36,40 @@ public class JwtService {
             UsuarioEntity usuario) {
 
         List<String> roles =
-                usuario.getRoles()
-                        .stream()
-                        .map(RolEntity::getNombre)
-                        .toList();
+                usuario.getRoles() == null
+
+                        ? Collections.emptyList()
+
+                        : usuario.getRoles()
+                                .stream()
+                                .map(RolEntity::getNombre)
+                                .toList();
 
         List<String> permisos =
-                usuario.getRoles()
-                        .stream()
+                usuario.getRoles() == null
 
-                        .flatMap(rol ->
-                                rol.getPermisos()
-                                        .stream())
+                        ? Collections.emptyList()
 
-                        .map(PermisoEntity::getNombre)
+                        : usuario.getRoles()
+                                .stream()
 
-                        .distinct()
+                                .flatMap(rol ->
 
-                        .toList();
+                                        rol.getPermisos() == null
+
+                                                ? java.util.stream.Stream
+                                                        .<PermisoEntity>empty()
+
+                                                : rol.getPermisos()
+                                                        .stream()
+                                )
+
+                                .map(permiso ->
+                                        permiso.getNombre())
+
+                                .distinct()
+
+                                .toList();
 
         return Jwts.builder()
 
@@ -76,7 +93,8 @@ public class JwtService {
                 .compact();
     }
 
-    public String extractUsername(String token) {
+    public String extractUsername(
+            String token) {
 
         return extractClaims(token)
                 .getSubject();
@@ -89,7 +107,9 @@ public class JwtService {
         String extractedUsername =
                 extractUsername(token);
 
-        return extractedUsername.equals(username)
+        return extractedUsername
+                .equals(username)
+
                 && !isTokenExpired(token);
     }
 
@@ -114,7 +134,7 @@ public class JwtService {
 
                 .getPayload();
     }
-    
+
     public List<String> extractPermisos(
             String token) {
 
@@ -125,7 +145,7 @@ public class JwtService {
                 "permisos",
                 List.class);
     }
-    
+
     public String generateAccessToken(
             String username) {
 
@@ -146,5 +166,4 @@ public class JwtService {
 
                 .compact();
     }
-    
 }
