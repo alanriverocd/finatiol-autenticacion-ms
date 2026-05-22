@@ -8,8 +8,6 @@ import org.springframework.stereotype.Service;
 
 import com.finatiol.autenticacion.entity.RefreshTokenEntity;
 
-import com.finatiol.autenticacion.entity.UsuarioEntity;
-
 import com.finatiol.autenticacion.exception.TokenExpiradoException;
 
 import com.finatiol.autenticacion.repository.RefreshTokenRepository;
@@ -33,7 +31,7 @@ public class RefreshTokenService {
 
     public RefreshTokenEntity
     crearRefreshToken(
-            UsuarioEntity usuario) {
+            String username) {
 
         RefreshTokenEntity refreshToken =
                 new RefreshTokenEntity();
@@ -48,7 +46,7 @@ public class RefreshTokenService {
 
         refreshToken.setRevocado(false);
 
-        refreshToken.setUsuario(usuario);
+        refreshToken.setUsername(username);
 
         return refreshTokenRepository
                 .save(refreshToken);

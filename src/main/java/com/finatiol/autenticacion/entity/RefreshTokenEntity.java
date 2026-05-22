@@ -21,9 +21,8 @@ public class RefreshTokenEntity {
     @Column(nullable = false)
     private Boolean revocado;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "usuario_id")
-    private UsuarioEntity usuario;
+    @Column(nullable = false)
+    private String username;
 
     public Long getId() {
         return id;
@@ -63,13 +62,13 @@ public class RefreshTokenEntity {
         this.revocado = revocado;
     }
 
-    public UsuarioEntity getUsuario() {
-        return usuario;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUsuario(
-            UsuarioEntity usuario) {
+    public void setUsername(
+            String username) {
 
-        this.usuario = usuario;
+        this.username = username;
     }
 }

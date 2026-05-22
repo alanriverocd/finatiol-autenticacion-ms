@@ -1,34 +1,17 @@
 package com.finatiol.autenticacion.security;
 
 import org.springframework.context.annotation.Bean;
-
 import org.springframework.context.annotation.Configuration;
-
 import org.springframework.security.authentication.AuthenticationProvider;
-
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
-
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-
 import org.springframework.security.config.http.SessionCreationPolicy;
-
-import org.springframework.security.core.userdetails.UserDetailsService;
-
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
 import org.springframework.security.crypto.password.PasswordEncoder;
-
 import org.springframework.security.web.SecurityFilterChain;
-
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-
-import com.finatiol.autenticacion.repository.UsuarioRepository;
 
 @Configuration
 @EnableMethodSecurity
@@ -40,8 +23,8 @@ public class SecurityConfig {
     private final CustomAccessDeniedHandler
             customAccessDeniedHandler;
 
-    private final UsuarioRepository
-            usuarioRepository;
+    private final CustomUserDetailsService
+            customUserDetailsService;
 
     private final AuditFilter
             auditFilter;
@@ -54,8 +37,8 @@ public class SecurityConfig {
             CustomAccessDeniedHandler
                     customAccessDeniedHandler,
 
-            UsuarioRepository
-                    usuarioRepository,
+            CustomUserDetailsService
+                    customUserDetailsService,
 
             AuditFilter
                     auditFilter) {
@@ -66,32 +49,27 @@ public class SecurityConfig {
         this.customAccessDeniedHandler =
                 customAccessDeniedHandler;
 
-        this.usuarioRepository =
-                usuarioRepository;
+        this.customUserDetailsService =
+                customUserDetailsService;
 
         this.auditFilter =
                 auditFilter;
     }
 
     @Bean
-    public SecurityFilterChain
-    securityFilterChain(
+    public SecurityFilterChain securityFilterChain(
             HttpSecurity http)
             throws Exception {
 
         http
-
-                .csrf(csrf ->
-                        csrf.disable())
+                .csrf(csrf -> csrf.disable())
 
                 .sessionManagement(session ->
-
                         session.sessionCreationPolicy(
                                 SessionCreationPolicy.STATELESS)
                 )
 
                 .authorizeHttpRequests(auth ->
-
                         auth.requestMatchers(
                                         "/auth/**",
                                         "/actuator/**",
@@ -100,13 +78,11 @@ public class SecurityConfig {
                                         "/swagger-ui.html"
                                 )
                                 .permitAll()
-
                                 .anyRequest()
                                 .authenticated()
                 )
 
                 .exceptionHandling(exception ->
-
                         exception.accessDeniedHandler(
                                 customAccessDeniedHandler)
                 )
@@ -116,13 +92,11 @@ public class SecurityConfig {
 
                 .addFilterBefore(
                         jwtAuthenticationFilter,
-
                         UsernamePasswordAuthenticationFilter.class
                 )
 
                 .addFilterAfter(
                         auditFilter,
-
                         BasicAuthenticationFilter.class
                 );
 
@@ -130,30 +104,13 @@ public class SecurityConfig {
     }
 
     @Bean
-    public UserDetailsService
-    userDetailsService() {
+    public AuthenticationProvider authenticationProvider() {
 
-        return username ->
-
-                usuarioRepository
-                        .findByUsername(username)
-
-                        .orElseThrow(() ->
-
-                                new UsernameNotFoundException(
-                                        "Usuario no encontrado"));
-    }
-
-    @Bean
-    public AuthenticationProvider
-    authenticationProvider() {
-
-        DaoAuthenticationProvider
-                provider =
+        DaoAuthenticationProvider provider =
                 new DaoAuthenticationProvider();
 
         provider.setUserDetailsService(
-                userDetailsService());
+                customUserDetailsService);
 
         provider.setPasswordEncoder(
                 passwordEncoder());
@@ -162,8 +119,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public PasswordEncoder
-    passwordEncoder() {
+    public PasswordEncoder passwordEncoder() {
 
         return new BCryptPasswordEncoder();
     }

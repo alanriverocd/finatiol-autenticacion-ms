@@ -4,8 +4,8 @@ public class UsuarioNoEncontradoException
         extends RuntimeException {
 
     public UsuarioNoEncontradoException(
-            String mensaje) {
+            String message) {
 
-        super(mensaje);
+        super(message);
     }
 }

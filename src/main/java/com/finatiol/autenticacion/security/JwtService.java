@@ -8,10 +8,6 @@ import javax.crypto.SecretKey;
 
 import org.springframework.stereotype.Service;
 
-import com.finatiol.autenticacion.entity.PermisoEntity;
-import com.finatiol.autenticacion.entity.RolEntity;
-import com.finatiol.autenticacion.entity.UsuarioEntity;
-
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -33,63 +29,30 @@ public class JwtService {
     }
 
     public String generateToken(
-            UsuarioEntity usuario) {
+            UserDetailsImpl usuario) {
 
         List<String> roles =
                 usuario.getRoles() == null
-
                         ? Collections.emptyList()
-
-                        : usuario.getRoles()
-                                .stream()
-                                .map(RolEntity::getNombre)
-                                .toList();
+                        : usuario.getRoles();
 
         List<String> permisos =
-                usuario.getRoles() == null
-
+                usuario.getPermisos() == null
                         ? Collections.emptyList()
-
-                        : usuario.getRoles()
-                                .stream()
-
-                                .flatMap(rol ->
-
-                                        rol.getPermisos() == null
-
-                                                ? java.util.stream.Stream
-                                                        .<PermisoEntity>empty()
-
-                                                : rol.getPermisos()
-                                                        .stream()
-                                )
-
-                                .map(permiso ->
-                                        permiso.getNombre())
-
-                                .distinct()
-
-                                .toList();
+                        : usuario.getPermisos();
 
         return Jwts.builder()
-
                 .subject(usuario.getUsername())
-
                 .claim("roles", roles)
-
                 .claim("permisos", permisos)
-
                 .issuedAt(new Date())
-
                 .expiration(
                         new Date(
                                 System.currentTimeMillis()
                                         + EXPIRATION))
-
                 .signWith(
                         getSignKey(),
                         SignatureAlgorithm.HS256)
-
                 .compact();
     }
 

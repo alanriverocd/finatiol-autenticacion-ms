@@ -1,7 +1,5 @@
 package com.finatiol.autenticacion.dto;
 
-import java.util.List;
-
 public class UsuarioResponseDTO {
 
     private Long id;
@@ -12,29 +10,11 @@ public class UsuarioResponseDTO {
 
     private String email;
 
+    private String password;
+
     private Boolean activo;
 
-    private List<RolResponseDTO>
-            roles;
-
     public UsuarioResponseDTO() {
-    }
-
-    public UsuarioResponseDTO(
-            Long id,
-            String nombre,
-            String username,
-            String email,
-            Boolean activo,
-            List<RolResponseDTO>
-                    roles) {
-
-        this.id = id;
-        this.nombre = nombre;
-        this.username = username;
-        this.email = email;
-        this.activo = activo;
-        this.roles = roles;
     }
 
     public Long getId() {
@@ -49,9 +29,7 @@ public class UsuarioResponseDTO {
         return nombre;
     }
 
-    public void setNombre(
-            String nombre) {
-
+    public void setNombre(String nombre) {
         this.nombre = nombre;
     }
 
@@ -59,9 +37,7 @@ public class UsuarioResponseDTO {
         return username;
     }
 
-    public void setUsername(
-            String username) {
-
+    public void setUsername(String username) {
         this.username = username;
     }
 
@@ -69,32 +45,23 @@ public class UsuarioResponseDTO {
         return email;
     }
 
-    public void setEmail(
-            String email) {
-
+    public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public Boolean getActivo() {
         return activo;
     }
 
-    public void setActivo(
-            Boolean activo) {
-
+    public void setActivo(Boolean activo) {
         this.activo = activo;
-    }
-
-    public List<RolResponseDTO>
-    getRoles() {
-
-        return roles;
-    }
-
-    public void setRoles(
-            List<RolResponseDTO>
-                    roles) {
-
-        this.roles = roles;
     }
 }
