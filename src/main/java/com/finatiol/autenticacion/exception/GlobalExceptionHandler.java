@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import com.finatiol.autenticacion.constants.ErrorCodes;
+import com.finatiol.common.constants.auth.ErrorCodes;
 
-import com.finatiol.autenticacion.constants.ErrorMessages;
+import com.finatiol.common.constants.auth.ErrorMessages;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {

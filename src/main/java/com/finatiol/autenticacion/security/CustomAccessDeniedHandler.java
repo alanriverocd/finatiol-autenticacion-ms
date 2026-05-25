@@ -12,9 +12,9 @@ import org.springframework.security.web.access.AccessDeniedHandler;
 
 import org.springframework.stereotype.Component;
 
-import com.finatiol.autenticacion.constants.ErrorCodes;
+import com.finatiol.common.constants.auth.ErrorCodes;
 
-import com.finatiol.autenticacion.constants.ErrorMessages;
+import com.finatiol.common.constants.auth.ErrorMessages;
 
 import com.finatiol.autenticacion.exception.ApiExceptionResponse;
 

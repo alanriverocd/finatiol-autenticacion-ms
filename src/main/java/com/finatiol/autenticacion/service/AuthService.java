@@ -7,7 +7,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.finatiol.autenticacion.client.UsuarioClient;
-import com.finatiol.autenticacion.constants.ErrorMessages;
+import com.finatiol.common.constants.auth.ErrorMessages;
 import com.finatiol.autenticacion.dto.AuthResponse;
 import com.finatiol.autenticacion.dto.LoginRequest;
 import com.finatiol.autenticacion.dto.RefreshTokenRequest;

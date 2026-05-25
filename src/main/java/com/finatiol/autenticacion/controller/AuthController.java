@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.finatiol.autenticacion.constants.SuccessCodes;
-import com.finatiol.autenticacion.constants.SuccessMessages;
+import com.finatiol.common.constants.auth.SuccessCodes;
+import com.finatiol.common.constants.auth.SuccessMessages;
 import com.finatiol.autenticacion.dto.ApiResponse;
 import com.finatiol.autenticacion.dto.AuthResponse;
 import com.finatiol.autenticacion.dto.LoginRequest;
