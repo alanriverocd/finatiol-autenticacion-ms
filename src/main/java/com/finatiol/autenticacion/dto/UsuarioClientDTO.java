@@ -16,6 +16,8 @@ public class UsuarioClientDTO {
 
     private List<String> permisos;
 
+    private String tenantId;
+
     public UsuarioClientDTO() {
     }
 
@@ -75,5 +77,13 @@ public class UsuarioClientDTO {
             List<String> permisos) {
 
         this.permisos = permisos;
+    }
+
+    public String getTenantId() {
+        return tenantId;
+    }
+
+    public void setTenantId(String tenantId) {
+        this.tenantId = tenantId;
     }
 }

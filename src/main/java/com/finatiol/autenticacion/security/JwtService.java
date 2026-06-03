@@ -45,6 +45,7 @@ public class JwtService {
                 .subject(usuario.getUsername())
                 .claim("roles", roles)
                 .claim("permisos", permisos)
+                .claim("tenantId", usuario.getTenantId())
                 .issuedAt(new Date())
                 .expiration(
                         new Date(
@@ -104,9 +105,13 @@ public class JwtService {
         Claims claims =
                 extractClaims(token);
 
-        return claims.get(
+        List<String> permisos = claims.get(
                 "permisos",
                 List.class);
+
+        return permisos != null
+                ? permisos
+                : Collections.emptyList();
     }
 
     public String generateAccessToken(

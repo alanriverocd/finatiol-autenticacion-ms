@@ -20,18 +20,22 @@ public class UserDetailsImpl implements UserDetails {
 
     private final List<String> permisos;
 
+    private final String tenantId;
+
     public UserDetailsImpl(
             String username,
             String password,
             Boolean activo,
             List<String> roles,
-            List<String> permisos) {
+            List<String> permisos,
+            String tenantId) {
 
         this.username = username;
         this.password = password;
         this.activo = activo;
         this.roles = roles;
         this.permisos = permisos;
+        this.tenantId = tenantId;
     }
 
     @Override
@@ -50,6 +54,10 @@ public class UserDetailsImpl implements UserDetails {
 
     public List<String> getPermisos() {
         return permisos;
+    }
+
+    public String getTenantId() {
+        return tenantId;
     }
 
     @Override

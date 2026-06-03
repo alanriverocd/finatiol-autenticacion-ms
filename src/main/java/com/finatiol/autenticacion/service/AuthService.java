@@ -1,5 +1,7 @@
 package com.finatiol.autenticacion.service;
 
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
 import java.util.Collections;
 import java.util.List;
 
@@ -29,16 +31,28 @@ public class AuthService {
 
     private final RefreshTokenService refreshTokenService;
 
+    private final Counter loginExitoCounter;
+    private final Counter loginErrorCounter;
+
     public AuthService(
             UsuarioClient usuarioClient,
             JwtService jwtService,
             PasswordEncoder passwordEncoder,
-            RefreshTokenService refreshTokenService) {
+            RefreshTokenService refreshTokenService,
+            MeterRegistry meterRegistry) {
 
         this.usuarioClient = usuarioClient;
         this.jwtService = jwtService;
         this.passwordEncoder = passwordEncoder;
         this.refreshTokenService = refreshTokenService;
+        this.loginExitoCounter = Counter.builder("auth_login_total")
+                .description("Total de intentos de login")
+                .tag("resultado", "exito")
+                .register(meterRegistry);
+        this.loginErrorCounter = Counter.builder("auth_login_total")
+                .description("Total de intentos de login")
+                .tag("resultado", "error")
+                .register(meterRegistry);
     }
 
     public AuthResponse login(
@@ -58,6 +72,7 @@ public class AuthService {
                 request.getPassword(),
                 usuario.getPassword())) {
 
+            loginErrorCounter.increment();
             throw new PasswordIncorrectoException(
                     ErrorMessages.PASSWORD_INCORRECTO);
         }
@@ -73,7 +88,8 @@ public class AuthService {
                 usuario.getRoles() != null
                         ? usuario.getRoles()
                         : Collections.emptyList(),
-                permisos
+                permisos,
+                usuario.getTenantId()
         );
 
         String accessToken =
@@ -83,6 +99,8 @@ public class AuthService {
                 refreshTokenService
                         .crearRefreshToken(
                                 usuario.getUsername());
+
+        loginExitoCounter.increment();
 
         return new AuthResponse(
                 accessToken,
@@ -98,9 +116,34 @@ public class AuthService {
                         .validarRefreshToken(
                                 request.getRefreshToken());
 
+        UsuarioClientDTO usuario;
+        try {
+            usuario = usuarioClient
+                    .findByUsernameForAuth(
+                            refreshToken.getUsername());
+        } catch (Exception e) {
+            throw new UsuarioNoEncontradoException(
+                    ErrorMessages.USUARIO_NO_ENCONTRADO);
+        }
+
+        List<String> permisos = usuario.getPermisos() != null
+                ? usuario.getPermisos()
+                : Collections.emptyList();
+
+        UserDetailsImpl userDetails = new UserDetailsImpl(
+                usuario.getUsername(),
+                usuario.getPassword(),
+                usuario.getActivo(),
+                usuario.getRoles() != null
+                        ? usuario.getRoles()
+                        : Collections.emptyList(),
+                permisos,
+                usuario.getTenantId()
+        );
+
         String accessToken =
-                jwtService.generateAccessToken(
-                        refreshToken.getUsername());
+                jwtService.generateToken(
+                        userDetails);
 
         return new AuthResponse(
                 accessToken,

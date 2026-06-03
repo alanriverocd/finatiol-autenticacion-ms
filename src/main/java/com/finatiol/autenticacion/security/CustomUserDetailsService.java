@@ -45,7 +45,8 @@ public class CustomUserDetailsService
                 dto.getPassword(),
                 dto.getActivo(),
                 dto.getRoles(),
-                permisos
+                permisos,
+                dto.getTenantId()
         );
     }
 }
